@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const account = await getAccountByDomain(hostname)
 
   if (!account) {
-    return new Response('Error: account not found', {
+    return new Response('Error: account not found or you have not activated Imagize on your website', {
       status: 400
     })
   }
