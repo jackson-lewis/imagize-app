@@ -1,18 +1,11 @@
-import { getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
+import { getAccount, getAccountByDomain, getApiKey, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
+  const { searchParams, hostname } = new URL(request.url)
   const url = searchParams.get('url')
   const format = searchParams.get('format') || 'webp'
   let quality: number = Number(searchParams.get('quality')) || 0
-  const apiKey = getApiKey(request)
-
-  if (!apiKey) {
-    return new Response('Error: api key not set', {
-      status: 400
-    })
-  }
 
   if (!url) {
     return new Response('Error: no image url provided', {
@@ -20,7 +13,7 @@ export async function GET(request: Request) {
     })
   }
 
-  const account = await getAccount(apiKey)
+  const account = await getAccountByDomain(hostname)
 
   if (!account) {
     return new Response('Error: account not found', {

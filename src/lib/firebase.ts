@@ -46,6 +46,28 @@ export async function getAccount(key: string) {
 
 
 /**
+ * Get an account by domain.
+ * 
+ * @param {string} domain 
+ */
+export async function getAccountByDomain(domain: string) {
+  const q = query(collection(db, collectionName), where('domains', 'array-contains', domain))
+  const querySnapshot = await getDocs(q)
+
+  if ( querySnapshot.empty ) {
+    return false
+  }
+
+  const doc = querySnapshot.docs[0]
+
+  return {
+    id: doc.id,
+    data: doc.data()
+  }
+}
+
+
+/**
  * Increment the credit usage by 1.
  * 
  * @param {string} id 
