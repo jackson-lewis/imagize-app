@@ -1,4 +1,4 @@
-import { getAccount, incrementCredit } from '@/lib/firebase'
+import { getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
 
 export async function POST(request: Request) {
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     buffer,
     contentType
   } = await request.json()
-  const apiKey = request.headers.get('authorization')?.replace(/^Bearer\s/, '')
+  const apiKey = getApiKey(request)
 
   if (!apiKey) {
     return new Response('Error: api key not set', {

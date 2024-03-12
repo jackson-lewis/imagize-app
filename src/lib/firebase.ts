@@ -14,6 +14,16 @@ const collectionName = 'accounts'
 
 
 /**
+ * Get the API key from the authorization header.
+ * 
+ * @param {Request} request 
+ */
+export function getApiKey(request: Request) {
+  return request.headers.get('authorization')?.replace(/^Bearer\s/, '')
+}
+
+
+/**
  * Get the account from Firestore database.
  * 
  * @param {string} key
