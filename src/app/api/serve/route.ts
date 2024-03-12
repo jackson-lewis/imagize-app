@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     })
   }
 
-  incrementCredit(account.id, account.data)
+  // incrementCredit(account.id, account.data)
 
   return new Response(await image.toBuffer(), {
     headers: {
