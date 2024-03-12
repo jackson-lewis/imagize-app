@@ -1,5 +1,11 @@
-import { getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
+import { accountLimitReached, getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
+import path from 'path'
+import { Storage } from '@google-cloud/storage'
+
+const storage = new Storage({
+  projectId: process.env.FIREBASE_PROJECT_ID
+})
 
 export async function POST(request: Request) {
   let {
@@ -30,6 +36,12 @@ export async function POST(request: Request) {
     })
   }
 
+  if (accountLimitReached(account)) {
+    return new Response('Error: no credits available', {
+      status: 400
+    })
+  }
+
   /**
    * Don't allow quality to come through as 0
    */
@@ -54,6 +66,13 @@ export async function POST(request: Request) {
 
     contentType = imageRes.headers.get('Content-Type')
   }
+
+  const filename = path.basename(url)
+
+  const originalsBucket = storage.bucket('original-image-backups')
+  await originalsBucket.file(filename).save(buffer, {
+    contentType
+  })
   
   const image = sharp(buffer)
 

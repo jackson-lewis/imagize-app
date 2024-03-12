@@ -1,0 +1,1 @@
+export const FREE_PLAN_CREDIT_LIMIT = 20

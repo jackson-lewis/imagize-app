@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { query, getDocs, getFirestore, collection, where, setDoc, doc, addDoc, DocumentData } from 'firebase/firestore'
+import { FREE_PLAN_CREDIT_LIMIT } from './constants'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -82,6 +83,24 @@ export async function incrementCredit(id: string, account: DocumentData) {
   newData.creditsUsed++
 
   await setDoc(doc(db, collectionName, id), newData)
+
+  return true
+}
+
+
+/**
+ * Check the account is valid to optimize.
+ * 
+ * @param account 
+ */
+export function accountLimitReached({ data }: DocumentData) {
+  if (data.plan === 'pro') {
+    return false
+  }
+
+  if (data.creditsUsed < FREE_PLAN_CREDIT_LIMIT) {
+    return false
+  }
 
   return true
 }

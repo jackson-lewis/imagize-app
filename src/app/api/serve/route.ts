@@ -1,4 +1,4 @@
-import { getAccount, getAccountByDomain, getApiKey, incrementCredit } from '@/lib/firebase'
+import { getAccountByDomain, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
 
 export async function GET(request: Request) {
