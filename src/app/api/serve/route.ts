@@ -62,7 +62,8 @@ export async function GET(request: Request) {
 
   return new Response(await image.toBuffer(), {
     headers: {
-      'Content-Type': `image/${format}`
+      'Content-Type': `image/${format}`,
+      'Cache-Control': 'public, max-age=3600, must-revalidate'
     }
   })
 }
