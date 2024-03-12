@@ -2,7 +2,7 @@ import { getAccount, getAccountByDomain, getApiKey, incrementCredit } from '@/li
 import sharp from 'sharp'
 
 export async function GET(request: Request) {
-  const { searchParams, hostname } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const url = searchParams.get('url')
   const format = searchParams.get('format') || 'webp'
   let quality: number = Number(searchParams.get('quality')) || 0
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     })
   }
 
-  const account = await getAccountByDomain(hostname)
+  const account = await getAccountByDomain((new URL(url)).hostname)
 
   if (!account) {
     return new Response('Error: account not found or you have not activated Imagize on your website', {

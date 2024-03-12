@@ -51,6 +51,7 @@ export async function getAccount(key: string) {
  * @param {string} domain 
  */
 export async function getAccountByDomain(domain: string) {
+  console.log(domain)
   const q = query(collection(db, collectionName), where('domains', 'array-contains', domain))
   const querySnapshot = await getDocs(q)
 
