@@ -2,6 +2,7 @@ import { accountLimitReached, getAccount, getApiKey, incrementCredit } from '@/l
 import sharp from 'sharp'
 import path from 'path'
 import { Storage } from '@google-cloud/storage'
+import { ImageContentTypes } from '@/lib/types'
 
 const storage = new Storage({
   projectId: process.env.FIREBASE_PROJECT_ID
@@ -13,6 +14,11 @@ export async function POST(request: Request) {
     quality = 70,
     buffer,
     contentType
+  }: {
+    url: string,
+    quality: number,
+    buffer: Buffer,
+    contentType: ImageContentTypes
   } = await request.json()
   const apiKey = getApiKey(request)
 
@@ -64,7 +70,7 @@ export async function POST(request: Request) {
 
     buffer = Buffer.from(await imageRes.arrayBuffer())
 
-    contentType = imageRes.headers.get('Content-Type')
+    contentType = imageRes.headers.get('Content-Type') as ImageContentTypes
   }
 
   const filename = path.basename(url)
@@ -86,7 +92,7 @@ export async function POST(request: Request) {
     })
   }
 
-  incrementCredit(account.id, account.data)
+  await incrementCredit(account.id, account.data)
 
   return new Response(await image.toBuffer(), {
     headers: {

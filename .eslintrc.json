@@ -1,3 +1,15 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "indent": ["error", 2],
+    "camelcase": "warn",
+    "space-in-parens": ["warn", "never"],
+    "object-curly-spacing": ["warn", "always"],
+    "array-bracket-spacing": ["warn", "never"],
+    "computed-property-spacing": ["warn", "never"],
+    "comma-spacing": "warn",
+    "quotes": ["warn", "single"],
+    "template-curly-spacing": ["warn", "never"],
+    "no-var": "error"
+  }
 }

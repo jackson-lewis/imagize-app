@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
-import { query, getDocs, getFirestore, collection, where, setDoc, doc, addDoc, DocumentData } from 'firebase/firestore'
+import { query, getDocs, getFirestore, collection, where, setDoc, doc } from 'firebase/firestore'
 import { FREE_PLAN_CREDIT_LIMIT } from './constants'
+import { Account } from './types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -17,23 +18,23 @@ const collectionName = 'accounts'
 /**
  * Get the API key from the authorization header.
  * 
- * @param {Request} request 
+ * @param request 
  */
 export function getApiKey(request: Request) {
-  return request.headers.get('authorization')?.replace(/^Bearer\s/, '')
+  return request.headers.get('authorization')?.replace(/^Bearer\s/, '') || false
 }
 
 
 /**
  * Get the account from Firestore database.
  * 
- * @param {string} key
+ * @param key The API key
  */
 export async function getAccount(key: string) {
   const q = query(collection(db, collectionName), where('key', '==', key))
   const querySnapshot = await getDocs(q)
 
-  if ( querySnapshot.empty ) {
+  if (querySnapshot.empty) {
     return false
   }
 
@@ -41,7 +42,7 @@ export async function getAccount(key: string) {
 
   return {
     id: doc.id,
-    data: doc.data()
+    data: doc.data() as Account
   }
 }
 
@@ -49,14 +50,13 @@ export async function getAccount(key: string) {
 /**
  * Get an account by domain.
  * 
- * @param {string} domain 
+ * @param domain The hostname to match account by
  */
 export async function getAccountByDomain(domain: string) {
-  console.log(domain)
   const q = query(collection(db, collectionName), where('domains', 'array-contains', domain))
   const querySnapshot = await getDocs(q)
 
-  if ( querySnapshot.empty ) {
+  if (querySnapshot.empty) {
     return false
   }
 
@@ -64,7 +64,7 @@ export async function getAccountByDomain(domain: string) {
 
   return {
     id: doc.id,
-    data: doc.data()
+    data: doc.data() as Account
   }
 }
 
@@ -72,11 +72,11 @@ export async function getAccountByDomain(domain: string) {
 /**
  * Increment the credit usage by 1.
  * 
- * @param {string} id 
- * @param {DocumentData} account 
+ * @param id 
+ * @param account 
  */
-export async function incrementCredit(id: string, account: DocumentData) {
-  const newData = {
+export async function incrementCredit(id: string, account: Account) {
+  const newData: Account = {
     ...account
   }
 
@@ -93,7 +93,9 @@ export async function incrementCredit(id: string, account: DocumentData) {
  * 
  * @param account 
  */
-export function accountLimitReached({ data }: DocumentData) {
+export function accountLimitReached({ data }: {
+  data: Account
+}) {
   if (data.plan === 'pro') {
     return false
   }

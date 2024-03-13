@@ -1,10 +1,12 @@
 import { getAccountByDomain, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
 
+type ImageFormats = 'jpeg' | 'png' | 'webp' | 'avif'
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const url = searchParams.get('url')
-  const format = searchParams.get('format') || 'webp'
+  const format = searchParams.get('format') as ImageFormats || 'webp'
   let quality: number = Number(searchParams.get('quality')) || 0
 
   if (!url) {
@@ -66,7 +68,7 @@ export async function GET(request: Request) {
     })
   }
 
-  incrementCredit(account.id, account.data)
+  await incrementCredit(account.id, account.data)
 
   return new Response(await image.toBuffer(), {
     headers: {
