@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { query, getDocs, getFirestore, collection, where, setDoc, doc } from 'firebase/firestore'
 import { FREE_PLAN_CREDIT_LIMIT } from './constants'
-import { Account } from './types'
+import { Account, CreditTypes } from './types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -75,12 +75,12 @@ export async function getAccountByDomain(domain: string) {
  * @param id 
  * @param account 
  */
-export async function incrementCredit(id: string, account: Account) {
+export async function incrementCredit(type: CreditTypes, id: string, account: Account) {
   const newData: Account = {
     ...account
   }
 
-  newData.creditsUsed++
+  newData[`${type}Credits`]++
 
   await setDoc(doc(db, collectionName, id), newData)
 
@@ -95,14 +95,27 @@ export async function incrementCredit(id: string, account: Account) {
  */
 export function accountLimitReached({ data }: {
   data: Account
-}) {
+}, type: CreditTypes) {
   if (data.plan === 'pro') {
     return false
   }
 
-  if (data.creditsUsed < FREE_PLAN_CREDIT_LIMIT) {
+  if (data[`${type}Credits`] < FREE_PLAN_CREDIT_LIMIT) {
     return false
   }
+
+  return true
+}
+
+
+export async function addDomain(domain: string, accountId: string, account: Account) {
+  const newData: Account = {
+    ...account
+  }
+
+  newData.domains.push(domain)
+
+  await setDoc(doc(db, collectionName, accountId), newData)
 
   return true
 }

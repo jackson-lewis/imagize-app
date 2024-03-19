@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     })
   }
 
-  await incrementCredit(account.id, account.data)
+  await incrementCredit('optimize', account.id, account.data)
 
   return new Response(await image.toBuffer(), {
     headers: {
