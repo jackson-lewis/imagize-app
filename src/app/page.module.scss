@@ -1,0 +1,29 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+}
+
+.title {
+  position: relative;
+  font-size: 3rem;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120vw;
+    height: 75vw;
+    max-height: 800px;
+    z-index: -1;
+
+    // background: radial-gradient(closest-side, rgba(72,17,138,1) 0%, rgba(72,17,138,0) 80%);
+    background: radial-gradient(farthest-side, rgba(72,17,138,1) 0%, rgba(72,17,138,0) 80%);
+  }
+}

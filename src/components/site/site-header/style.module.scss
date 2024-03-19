@@ -1,0 +1,54 @@
+.header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    & > a {
+        font-size: 2rem;
+
+        transition: 300ms;
+
+        &:hover {
+            color: #ead2ff;
+        }
+    }
+}
+
+.ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+
+    a {
+        padding: 6px 12px;
+
+        border-radius: 4px;
+
+        transition: 300ms;
+
+        &:hover {
+            background-color: rgba(61, 45, 78, 0.5);
+            backdrop-filter: blur(4px);
+        }
+    }
+}
+
+.signup {
+    padding: 10px 20px;
+
+    border-radius: 4px;
+    background-color: var(--primary);
+    color: var(--white);
+
+    &:hover {
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,20 @@
+:root {
+    --primary: #5E13A9;
+    --black: #1D1724;
+    --white: #FFFFFF;
+}
+
+*::selection {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+body {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+h1 {
+    font-weight: 400;
+    text-align: center;
+}
