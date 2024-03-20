@@ -1,20 +1,21 @@
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export default function Page() {
-  async function signUp() {
+  async function login() {
     'use server'
 
+    cookies().set('currentUser', 'jackson')
     redirect('/dashboard')
   }
 
   return (
     <div>
-      <h1>Sign up</h1>
-      <form action={signUp}>
-        <input type="text" name="name" placeholder="Name" required />
+      <h1>Login</h1>
+      <form action={login}>
         <input type="email" name="email" placeholder="Email" required />
-        <input type="text" name="company" placeholder="Company" />
-        <button>Sign up</button>
+        <input type="password" name="password" />
+        <button>Login</button>
       </form>
     </div>
   )

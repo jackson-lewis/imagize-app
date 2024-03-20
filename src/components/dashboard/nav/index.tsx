@@ -5,7 +5,7 @@ export default function DashboardNav() {
     <nav>
       <ul>
         <li>
-          <Link href="/dashboard/account">Account</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </li>
         <li>
           <Link href="/dashboard/usage">Usage</Link>

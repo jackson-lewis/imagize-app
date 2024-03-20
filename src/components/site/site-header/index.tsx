@@ -17,6 +17,9 @@ export default function SiteHeader() {
             <Link href="/docs">docs</Link>
           </li>
           <li>
+            <Link href="/login">login</Link>
+          </li>
+          <li>
             <Link href="/sign-up" className={styles.signup}>sign up</Link>
           </li>
         </ul>
