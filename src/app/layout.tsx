@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Quicksand } from 'next/font/google'
 import './globals.scss'
-import SiteHeader from '@/components/site/site-header'
 
 const quicksand = Quicksand({ subsets: ['latin'] })
 
