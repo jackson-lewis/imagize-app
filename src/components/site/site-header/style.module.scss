@@ -9,12 +9,12 @@
     a {
         text-decoration: none;
         color: inherit;
+
+        transition: 200ms;
     }
 
     & > a {
         font-size: 2rem;
-
-        transition: 300ms;
 
         &:hover {
             color: #ead2ff;
@@ -25,30 +25,50 @@
 .ul {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 20px;
 
-    a {
-        padding: 6px 12px;
+    li:nth-last-child(2) {
+        margin-left: 20px;
+        position: relative;
 
-        border-radius: 4px;
+        &::before {
+            --gradient-center: rgb(73, 43, 105);
 
-        transition: 300ms;
+            content: "";
+            display: block;
+            position: absolute;
+            width: 1px;
+            height: 40px;
+            left: -20px;
+            top: calc(50% - 20px);
 
-        &:hover {
-            background-color: rgba(61, 45, 78, 0.5);
-            backdrop-filter: blur(4px);
+            background: linear-gradient(0deg, rgba(29,23,36,1) 0%, var(--gradient-center) 33%, var(--gradient-center) 66%, rgba(29,23,36,1) 100%);
         }
+    }
+}
+
+.link {
+    padding: 6px 12px;
+
+    border-radius: 4px;
+
+    &:hover {
+        background-color: rgba(61, 45, 78, 0.5);
+        backdrop-filter: blur(4px);
     }
 }
 
 .signup {
     padding: 10px 20px;
 
+    display: block;
     border-radius: 4px;
     background-color: var(--primary);
     color: var(--white);
 
     &:hover {
         text-decoration: none;
+        background-color: rgb(94, 19, 169, .5);
     }
 }

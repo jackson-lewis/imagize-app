@@ -5,7 +5,7 @@ export default function Page() {
   async function login() {
     'use server'
 
-    cookies().set('currentUser', 'jackson')
+    cookies().set('accountKey', 'i_spas6a7ac0aspeq9Ziwr')
     redirect('/dashboard')
   }
 

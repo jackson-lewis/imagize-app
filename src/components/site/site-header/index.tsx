@@ -8,16 +8,16 @@ export default function SiteHeader() {
       <nav>
         <ul className={styles.ul}>
           <li>
-            <Link href="/features">features</Link>
+            <Link href="/features" className={styles.link}>features</Link>
           </li>
           <li>
-            <Link href="/pricing">pricing</Link>
+            <Link href="/pricing" className={styles.link}>pricing</Link>
           </li>
           <li>
-            <Link href="/docs">docs</Link>
+            <Link href="/about" className={styles.link}>about</Link>
           </li>
           <li>
-            <Link href="/login">login</Link>
+            <Link href="/login" className={styles.link}>login</Link>
           </li>
           <li>
             <Link href="/sign-up" className={styles.signup}>sign up</Link>

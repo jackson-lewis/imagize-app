@@ -1,6 +1,15 @@
+import { cookies } from 'next/headers'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default function DashboardNav() {
+  async function logout() {
+    'use server'
+
+    cookies().delete('accountKey')
+    redirect('/?action=logout')
+  }
+
   return (
     <nav>
       <ul>
@@ -12,6 +21,11 @@ export default function DashboardNav() {
         </li>
         <li>
           <Link href="/dashboard/settings">Settings</Link>
+        </li>
+        <li>
+          <form action={logout}>
+            <button>Log out</button>
+          </form>
         </li>
       </ul>
     </nav>

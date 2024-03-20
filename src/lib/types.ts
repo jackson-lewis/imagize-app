@@ -29,6 +29,10 @@ export interface Account extends DocumentData {
    * List of domains authenticated with the account.
    */
   domains: string[]
+  /**
+   * Name on the account
+   */
+  name: string
 }
 
 export type CreditTypes = 'optimize' | 'cdn' | 'ai'
