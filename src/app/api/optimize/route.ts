@@ -1,4 +1,4 @@
-import { accountLimitReached, getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
+import { accountLimitReached, getAccount, getApiKey, incrementCredit, logUsage } from '@/lib/firebase'
 import sharp from 'sharp'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'
@@ -94,6 +94,7 @@ export async function POST(request: Request) {
   }
 
   await incrementCredit('optimize', account.id, account.data)
+  await logUsage(apiKey, hostname, 'optimize')
 
   return new Response(await image.toBuffer(), {
     headers: {

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { query, getDocs, getFirestore, collection, where, setDoc, doc } from 'firebase/firestore'
+import { query, getDocs, getFirestore, collection, where, setDoc, doc, increment, updateDoc } from 'firebase/firestore'
 import { FREE_PLAN_CREDIT_LIMIT } from './constants'
 import { Account, CreditTypes } from './types'
 
@@ -21,7 +21,7 @@ const collectionName = 'accounts'
  * @param request 
  */
 export function getApiKey(request: Request) {
-  return request.headers.get('authorization')?.replace(/^Bearer\s/, '') || false
+  return request.headers.get('authorization')?.replace(/^Bearer\s/, '') as Account['key'] || false
 }
 
 
@@ -88,15 +88,31 @@ export async function incrementCredit(type: CreditTypes, id: string, account: Ac
 }
 
 
+/**
+ * Log the usage to Firestore database.
+ * 
+ * @param apiKey The API key
+ * @param domain The domain the request was for
+ * @param type The action type
+ */
 export async function logUsage(
-  type: CreditTypes,
+  apiKey: Account['key'],
   domain: string,
-  id: string,
-  account: Account
+  type: CreditTypes
 ) {
-  await setDoc(doc(db, `${collection}/`, id), {
+  const date = new Date()
+  const collectionPath = `${collectionName}/${apiKey}/${domain}`
+  const docName = `${date.getFullYear()}-${date.getMonth() + 1}`
 
-  })
+  try {
+    await updateDoc(doc(db, collectionPath, docName), {
+      [type]: increment(1)
+    })
+  } catch(error) {
+    await setDoc(doc(db, collectionPath, docName), {
+      [type]: 1
+    })
+  }
 }
 
 

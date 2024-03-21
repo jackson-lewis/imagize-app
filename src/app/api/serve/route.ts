@@ -1,4 +1,4 @@
-import { getAccountByDomain, incrementCredit } from '@/lib/firebase'
+import { getAccountByDomain, incrementCredit, logUsage } from '@/lib/firebase'
 import sharp from 'sharp'
 
 type ImageFormats = 'jpeg' | 'png' | 'webp' | 'avif'
@@ -15,7 +15,8 @@ export async function GET(request: Request) {
     })
   }
 
-  const account = await getAccountByDomain((new URL(url)).hostname)
+  const { hostname } = new URL(url)
+  const account = await getAccountByDomain(hostname)
 
   if (!account) {
     return new Response('Error: account not found or you have not activated Imagize on your website', {
@@ -69,6 +70,7 @@ export async function GET(request: Request) {
   }
 
   await incrementCredit('cdn', account.id, account.data)
+  await logUsage(account.data.key, hostname, 'cdn')
 
   return new Response(await image.toBuffer(), {
     headers: {
