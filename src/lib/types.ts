@@ -32,7 +32,15 @@ export interface Account extends DocumentData {
   /**
    * Name on the account
    */
-  name: string
+  name: string 
+  /**
+  * Email on the account
+  */
+  email: string
+  /**
+  * Date the account was created
+  */
+  createDate: Date
 }
 
 export type CreditTypes = 'optimize' | 'cdn' | 'ai'

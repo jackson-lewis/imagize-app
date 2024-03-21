@@ -1,6 +1,5 @@
 import { accountLimitReached, getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
 import sharp from 'sharp'
-import path from 'path'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'
 

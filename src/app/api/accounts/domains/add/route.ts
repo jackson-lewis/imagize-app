@@ -28,5 +28,9 @@ export async function POST(request: Request) {
     })
   }
 
-  await addDomain(domain, account.id, account.data)
+  const success = await addDomain(domain, account.id, account.data)
+
+  return Response.json({
+    success
+  })
 }

@@ -88,6 +88,18 @@ export async function incrementCredit(type: CreditTypes, id: string, account: Ac
 }
 
 
+export async function logUsage(
+  type: CreditTypes,
+  domain: string,
+  id: string,
+  account: Account
+) {
+  await setDoc(doc(db, `${collection}/`, id), {
+
+  })
+}
+
+
 /**
  * Check the account is valid to optimize.
  * 
@@ -113,9 +125,41 @@ export async function addDomain(domain: string, accountId: string, account: Acco
     ...account
   }
 
-  newData.domains.push(domain)
+  newData.domains = newData.domains || []
 
-  await setDoc(doc(db, collectionName, accountId), newData)
+  if (newData.domains.indexOf(domain) < 0) {
+    newData.domains.push(domain)
 
-  return true
+    return await setDoc(doc(db, collectionName, accountId), newData)
+  }
+
+  return false
+}
+
+
+/**
+ * Get the account from Firestore database.
+ * 
+ * @param data The data to create a new account with
+ */
+export async function createAccount(data: Account) {
+  const key = generateKey()
+
+  data.key = key
+  data.createDate = new Date()
+  
+  await setDoc(doc(db, collectionName, key), data)
+
+  return key
+}
+
+
+function generateKey(): Account['key'] {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  for (let i = 0; i < 18; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return `i_${result}`
 }
