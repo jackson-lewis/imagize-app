@@ -4,8 +4,11 @@ import path from 'path'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'
 
+const gcloudKeys = process.env.GCLOUD_SA_KEYS || ''
+
 const storage = new Storage({
-  projectId: process.env.FIREBASE_PROJECT_ID
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  credentials: JSON.parse(gcloudKeys)
 })
 
 export async function POST(request: Request) {
@@ -42,7 +45,7 @@ export async function POST(request: Request) {
     })
   }
 
-  if (accountLimitReached(account)) {
+  if (accountLimitReached(account, 'optimize')) {
     return new Response('Error: no credits available', {
       status: 400
     })
@@ -73,10 +76,9 @@ export async function POST(request: Request) {
     contentType = imageRes.headers.get('Content-Type') as ImageContentTypes
   }
 
-  const filename = path.basename(url)
-
+  const { hostname, pathname } = new URL(url)
   const originalsBucket = storage.bucket('original-image-backups')
-  await originalsBucket.file(filename).save(buffer, {
+  await originalsBucket.file(`${apiKey}/${hostname}${pathname}`).save(buffer, {
     contentType
   })
   
