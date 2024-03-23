@@ -1,4 +1,5 @@
 import { usageLimitReached, getAccountByDomain, logUsage } from '@/lib/firebase'
+import { redirect } from 'next/navigation'
 import sharp from 'sharp'
 
 type ImageFormats = 'jpeg' | 'png' | 'webp' | 'avif'
@@ -18,16 +19,8 @@ export async function GET(request: Request) {
   const { hostname } = new URL(url)
   const account = await getAccountByDomain(hostname)
 
-  if (!account) {
-    return new Response('Error: account not found or you have not activated Imagize on your website', {
-      status: 400
-    })
-  }
-
-  if (await usageLimitReached(account, 'cdn')) {
-    return new Response('Error: no credits available', {
-      status: 400
-    })
+  if (!account || await usageLimitReached(account, 'cdn')) {
+    redirect(url)
   }
 
   /**
@@ -75,7 +68,7 @@ export async function GET(request: Request) {
     })
   }
 
-  await logUsage(account.data.key, hostname, 'cdn')
+  await logUsage(account.key, hostname, 'cdn')
 
   return new Response(await image.toBuffer(), {
     headers: {
