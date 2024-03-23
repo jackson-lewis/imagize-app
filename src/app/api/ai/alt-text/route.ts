@@ -60,7 +60,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagetext:predict`
+    const location = 'us-central1'
+    const url = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/imagetext:predict`
 
     const predictions = await fetch(url, {
       method: 'post',
