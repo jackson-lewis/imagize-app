@@ -13,7 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 const accountCollection = 'accounts'
-const usageCollection = 'accounts'
+const usageCollection = 'usage'
 
 
 /**
