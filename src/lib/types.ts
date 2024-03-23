@@ -43,4 +43,4 @@ export interface Account extends DocumentData {
   createDate: Date
 }
 
-export type CreditTypes = 'optimize' | 'cdn' | 'ai'
+export type ServiceTypes = 'optimize' | 'cdn' | 'ai'

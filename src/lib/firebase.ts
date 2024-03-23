@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { query, getDocs, getFirestore, collection, where, setDoc, doc, increment, updateDoc, getDoc } from 'firebase/firestore'
 import { LIMITS } from './constants'
-import { Account, CreditTypes, Plans } from './types'
+import { Account, ServiceTypes, Plans } from './types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -71,7 +71,7 @@ export async function getAccountByDomain(domain: string) {
 export async function logUsage(
   apiKey: Account['key'],
   domain: string,
-  type: CreditTypes
+  type: ServiceTypes
 ) {
   const month = getCurrentMonth()
   const collectionDatePath = `${usageCollection}/${apiKey}/${month}`
@@ -103,7 +103,7 @@ export async function logUsage(
  */
 export async function usageLimitReached(
   account: Account,
-  type: CreditTypes
+  type: ServiceTypes
 ) {
   const month = getCurrentMonth()
   const docSnap = await getDoc(doc(db, 'usage', account.key))
@@ -131,7 +131,7 @@ export async function usageLimitReached(
 /**
  * Get the usage limit for the provided plan and service type.
  */
-function getUsageLimit(plan: Plans, type: CreditTypes) {
+function getUsageLimit(plan: Plans, type: ServiceTypes) {
   return LIMITS[plan][type]
 }
 

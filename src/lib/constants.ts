@@ -1,16 +1,11 @@
-import { CreditTypes, Plans } from './types'
-
-/**
- * The number of monthly credits available for the Free plan.
- */
-export const FREE_PLAN_CREDIT_LIMIT = 20
+import { ServiceTypes, Plans } from './types'
 
 /**
  * The number of monthly credits available
  */
 export const LIMITS: {
   [key in Plans]: {
-    [key in CreditTypes]: number
+    [key in ServiceTypes]: number
   }
 } = {
   free: {
