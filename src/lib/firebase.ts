@@ -32,7 +32,7 @@ export function getApiKey(request: Request) {
  * @param key The API key
  */
 export async function getAccount(key: Account['key']) {
-  const docSnap = await getDoc(doc(db, 'usage', key))
+  const docSnap = await getDoc(doc(db, accountCollection, key))
 
   if (!docSnap.exists()) {
     return false
