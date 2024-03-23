@@ -69,30 +69,44 @@ export async function POST(request: Request) {
     model: 'imagetext'
   })
 
-  const res = await imageTextModel.generateContentStream({
-    contents: [
-      {
-        role: 'user',
-        parts: [
-          {
-            // eslint-disable-next-line camelcase
-            inline_data: {
-              data: base64Image,
+  try {
+    const res = await imageTextModel.generateContentStream({
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
               // eslint-disable-next-line camelcase
-              mime_type: 'image/jpeg'
+              inline_data: {
+                data: base64Image,
+                // eslint-disable-next-line camelcase
+                mime_type: 'image/jpeg'
+              }
             }
-          }
-        ]
-      }
-    ]
-  })
+          ]
+        }
+      ]
+    })
+  
+    const contentResponse = await res.response
+    console.log(contentResponse.candidates[0].content.parts[0].text)
+  
+    await logUsage(apiKey, hostname, 'ai')
 
-  const contentResponse = await res.response
-  console.log(contentResponse.candidates[0].content.parts[0].text)
-
-  await logUsage(apiKey, hostname, 'ai')
-
-  return Response.json({
-    altText: true
-  })
+    return Response.json({
+      altText: true
+    })
+  } catch (error) {
+    console.error(error)
+    
+    return Response.json({
+      error: {
+        code: 1,
+        message: 'Internal server error.'
+      },
+      altText: ''
+    }, {
+      status: 400
+    })
+  }
 }
