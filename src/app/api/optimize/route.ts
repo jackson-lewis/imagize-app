@@ -1,4 +1,4 @@
-import { accountLimitReached, getAccount, getApiKey, incrementCredit, logUsage } from '@/lib/firebase'
+import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase'
 import sharp from 'sharp'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     })
   }
 
-  if (accountLimitReached(account, 'optimize')) {
+  if (await usageLimitReached(account, 'optimize')) {
     return new Response('Error: no credits available', {
       status: 400
     })
@@ -76,10 +76,10 @@ export async function POST(request: Request) {
   }
 
   const { hostname, pathname } = new URL(url)
-  const originalsBucket = storage.bucket('original-image-backups')
-  await originalsBucket.file(`${apiKey}/${hostname}${pathname}`).save(buffer, {
-    contentType
-  })
+  // const originalsBucket = storage.bucket('original-image-backups')
+  // await originalsBucket.file(`${apiKey}/${hostname}${pathname}`).save(buffer, {
+  //   contentType
+  // })
   
   const image = sharp(buffer)
 
@@ -93,7 +93,6 @@ export async function POST(request: Request) {
     })
   }
 
-  await incrementCredit('optimize', account.id, account.data)
   await logUsage(apiKey, hostname, 'optimize')
 
   return new Response(await image.toBuffer(), {

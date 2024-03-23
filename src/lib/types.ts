@@ -2,7 +2,7 @@ import { DocumentData } from 'firebase/firestore'
 
 export type ImageContentTypes = `image/${'jpeg' | 'jpg' | 'png'}`
 
-export type Plans = 'free' | 'pro'
+export type Plans = 'free' | 'pro' | 'enterprise'
 
 export interface Account extends DocumentData {
   /**

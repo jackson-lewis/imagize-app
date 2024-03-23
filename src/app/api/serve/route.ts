@@ -1,4 +1,4 @@
-import { getAccountByDomain, incrementCredit, logUsage } from '@/lib/firebase'
+import { usageLimitReached, getAccountByDomain, logUsage } from '@/lib/firebase'
 import sharp from 'sharp'
 
 type ImageFormats = 'jpeg' | 'png' | 'webp' | 'avif'
@@ -20,6 +20,12 @@ export async function GET(request: Request) {
 
   if (!account) {
     return new Response('Error: account not found or you have not activated Imagize on your website', {
+      status: 400
+    })
+  }
+
+  if (await usageLimitReached(account, 'cdn')) {
+    return new Response('Error: no credits available', {
       status: 400
     })
   }
@@ -69,7 +75,6 @@ export async function GET(request: Request) {
     })
   }
 
-  await incrementCredit('cdn', account.id, account.data)
   await logUsage(account.data.key, hostname, 'cdn')
 
   return new Response(await image.toBuffer(), {

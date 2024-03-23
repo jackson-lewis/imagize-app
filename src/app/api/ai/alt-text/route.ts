@@ -1,4 +1,4 @@
-import { accountLimitReached, getAccount, getApiKey, incrementCredit } from '@/lib/firebase'
+import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase'
 import { VertexAI } from '@google-cloud/vertexai'
 
 
@@ -30,12 +30,13 @@ export async function POST(request: Request) {
     })
   }
 
-  if (accountLimitReached(account, 'ai')) {
+  if (await usageLimitReached(account, 'ai')) {
     return new Response('Error: no credits available', {
       status: 400
     })
   }
-
+  
+  const { hostname } = new URL(url)
   const imageRes = await fetch(url)
 
   if (!imageRes.ok) {
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
   const contentResponse = await res.response
   console.log(contentResponse)
 
-  await incrementCredit('ai', account.id, account.data)
+  await logUsage(apiKey, hostname, 'ai')
 
   return Response.json({
     altText: true
