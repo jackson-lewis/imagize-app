@@ -141,7 +141,7 @@ function getUsageLimit(plan: Plans, type: ServiceTypes) {
  * 
  * Example: `2024-3`
  */
-function getCurrentMonth() {
+export function getCurrentMonth() {
   const date = new Date()
   return `${date.getFullYear()}-${date.getMonth() + 1}`
 }
@@ -194,4 +194,20 @@ function generateKey(): Account['key'] {
     result += characters.charAt(Math.floor(Math.random() * characters.length))
   }
   return `i_${result}`
+}
+
+
+/**
+ * Get the current month usage for an account.
+ * 
+ * @param key The API key
+ */
+export async function getAccountUsage(key: Account['key']) {
+  const docSnap = await getDoc(doc(db, usageCollection, key))
+
+  if (!docSnap.exists()) {
+    return false
+  }
+
+  return docSnap.data()
 }
