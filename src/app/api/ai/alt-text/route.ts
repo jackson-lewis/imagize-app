@@ -55,11 +55,13 @@ export async function POST(request: Request) {
     })
   }
 
+  const keys = process.env.GCLOUD_SA_KEYS || ''
+
   const vertex = new VertexAI({
     project: projectId,
-    location: 'global',
+    location: 'us-central1',
     googleAuthOptions: {
-      keyFilename: 'keys.json'
+      credentials: JSON.parse(keys)
     }
   })
 
@@ -86,7 +88,7 @@ export async function POST(request: Request) {
   })
 
   const contentResponse = await res.response
-  console.log(contentResponse)
+  console.log(contentResponse.candidates[0].content.parts[0].text)
 
   await logUsage(apiKey, hostname, 'ai')
 
