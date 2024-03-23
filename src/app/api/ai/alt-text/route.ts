@@ -1,12 +1,16 @@
 import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase'
-import { VertexAI } from '@google-cloud/vertexai'
 
+type Languages = 'en' | 'fr' | 'de' | 'it' | 'es'
 
 export async function POST(request: Request) {
-  let {
-    url
+  const {
+    url,
+    sampleCount,
+    language
   }: {
     url: string
+    sampleCount: number
+    language: Languages
   } = await request.json()
   const apiKey = getApiKey(request)
 
@@ -55,56 +59,47 @@ export async function POST(request: Request) {
     })
   }
 
-  const keys = process.env.GCLOUD_SA_KEYS || ''
-
-  const vertex = new VertexAI({
-    project: projectId,
-    location: 'us-central1',
-    googleAuthOptions: {
-      credentials: JSON.parse(keys)
-    }
-  })
-
-  const imageTextModel = vertex.getGenerativeModel({
-    model: 'imagetext'
-  })
-
   try {
-    const res = await imageTextModel.generateContentStream({
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              // eslint-disable-next-line camelcase
-              inline_data: {
-                data: base64Image,
-                // eslint-disable-next-line camelcase
-                mime_type: 'image/jpeg'
-              }
+    const url = `https://us-central1-aiplatform.googleapis.com/v1/projects/${projectId}/locations/us-central1/publishers/google/models/imagetext:predict`
+
+    const predictions = await fetch(url, {
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${process.env.GCLOUD_ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        instances: [
+          {
+            image: {
+              bytesBase64Encoded: base64Image
             }
-          ]
+          }
+        ],
+        parameters: {
+          sampleCount,
+          language
         }
-      ]
+      })
     })
-  
-    const contentResponse = await res.response
-    console.log(contentResponse.candidates[0].content.parts[0].text)
+      .then(res => res.json())
+      .then(data => {
+        return data.predictions
+      })
   
     await logUsage(apiKey, hostname, 'ai')
 
     return Response.json({
-      altText: true
+      predictions
     })
   } catch (error) {
     console.error(error)
-    
+
     return Response.json({
       error: {
         code: 1,
         message: 'Internal server error.'
       },
-      altText: ''
+      predictions: []
     }, {
       status: 400
     })
