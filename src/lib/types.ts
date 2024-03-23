@@ -32,3 +32,7 @@ export interface Account extends DocumentData {
    */
   domains: string[]
 }
+
+export type ServiceTypesUsage = {
+  [key in ServiceTypes]: number
+}
