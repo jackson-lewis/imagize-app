@@ -2,11 +2,13 @@ import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/fireba
 
 type Languages = 'en' | 'fr' | 'de' | 'it' | 'es'
 
+type Predictions = string[]
+
 export async function POST(request: Request) {
   const {
     url,
-    sampleCount,
-    language
+    sampleCount = 1,
+    language = 'en'
   }: {
     url: string
     sampleCount: number
@@ -83,7 +85,7 @@ export async function POST(request: Request) {
       })
     })
       .then(res => res.json())
-      .then(data => {
+      .then((data: { predictions: Predictions }) => {
         return data.predictions
       })
   
@@ -105,4 +107,9 @@ export async function POST(request: Request) {
       status: 400
     })
   }
+}
+
+
+export async function OPTIONS(request: Request) {
+  return new Response('ok')
 }
