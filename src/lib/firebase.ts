@@ -147,7 +147,7 @@ export function getCurrentMonth() {
 }
 
 
-export async function addDomain(domain: string, accountId: string, account: Account) {
+export async function addDomain(domain: string, account: Account) {
   const newData: Account = {
     ...account
   }
@@ -157,7 +157,7 @@ export async function addDomain(domain: string, accountId: string, account: Acco
   if (newData.domains.indexOf(domain) < 0) {
     newData.domains.push(domain)
 
-    return await setDoc(doc(db, accountCollection, accountId), newData)
+    return await setDoc(doc(db, accountCollection, account.key), newData)
   }
 
   return false
