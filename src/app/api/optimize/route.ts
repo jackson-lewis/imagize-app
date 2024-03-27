@@ -30,8 +30,8 @@ export async function POST(request: Request) {
     })
   }
 
-  if (!url) {
-    return new Response('Error: no image url provided', {
+  if (!url && !buffer) {
+    return new Response('Error: no image url or buffer provided', {
       status: 400
     })
   }
@@ -71,7 +71,6 @@ export async function POST(request: Request) {
     }
 
     buffer = Buffer.from(await imageRes.arrayBuffer())
-
     contentType = imageRes.headers.get('Content-Type') as ImageContentTypes
   }
 
