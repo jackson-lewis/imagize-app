@@ -15,12 +15,16 @@ export async function POST(request: Request) {
     url,
     quality = 70,
     buffer,
-    contentType
+    contentType,
+    domain = '',
+    filepath = ''
   }: {
     url: string,
     quality: number,
     buffer: Buffer,
-    contentType: ImageContentTypes
+    contentType: ImageContentTypes,
+    domain: string,
+    filepath: string
   } = await request.json()
   const apiKey = getApiKey(request)
 
@@ -74,11 +78,19 @@ export async function POST(request: Request) {
     contentType = imageRes.headers.get('Content-Type') as ImageContentTypes
   }
 
-  const { hostname, pathname } = new URL(url)
-  // const originalsBucket = storage.bucket('original-image-backups')
-  // await originalsBucket.file(`${apiKey}/${hostname}${pathname}`).save(buffer, {
-  //   contentType
-  // })
+  if (url) {
+    const { hostname, pathname } = new URL(url)
+
+    domain = hostname
+    filepath = pathname.replace(/^\//, '')
+  }
+
+  if (process.env.VERCEL) {
+    const originalsBucket = storage.bucket('original-image-backups')
+    await originalsBucket.file(`${apiKey}/${domain}/${filepath}`).save(buffer, {
+      contentType
+    })
+  }
   
   const image = sharp(buffer)
 
@@ -92,7 +104,7 @@ export async function POST(request: Request) {
     })
   }
 
-  await logUsage(apiKey, hostname, 'optimize')
+  await logUsage(apiKey, domain, 'optimize')
 
   return new Response(await image.toBuffer(), {
     headers: {
