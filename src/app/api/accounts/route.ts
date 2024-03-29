@@ -17,5 +17,5 @@ export async function GET(request: Request) {
     })
   }
 
-  return Response.json(account.data)
+  return Response.json(account)
 }
