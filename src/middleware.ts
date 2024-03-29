@@ -8,10 +8,10 @@ export function middleware(request: NextRequest) {
   }
 
   /**
-   * rewrite assets.imagize.io to imagize.io/api/serve
+   * rewrite assets.* to /api/cdn
    */
-  if (request.nextUrl.hostname === 'assets.imagize.jacksonlewis.dev') {
-    return NextResponse.rewrite(new URL('/api/serve', request.url))
+  if (request.nextUrl.hostname.match(/^assets\./)) {
+    return NextResponse.rewrite(new URL('/api/cdn', request.url))
   }
 }
  
