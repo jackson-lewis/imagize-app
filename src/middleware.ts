@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
       return new NextResponse('404: route not found', { status: 404 })
     }
 
-    const url = new URL('/cdn', request.url)
+    const url = new URL('/api/cdn', request.url)
     url.hostname = 'imagize.jacksonlewis.dev'
 
     console.log(url.href)
