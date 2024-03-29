@@ -17,6 +17,13 @@ export function middleware(request: NextRequest) {
 
     return NextResponse.rewrite(new URL('/api/cdn', request.url))
   }
+
+  /**
+   * rewrite api.* to /api
+   */
+  if (request.nextUrl.hostname.match(/^api\./)) {
+    return NextResponse.rewrite(new URL(`/api${request.nextUrl.pathname}`, request.url))
+  }
 }
  
 export const config = {
