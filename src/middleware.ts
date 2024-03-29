@@ -10,8 +10,8 @@ export function middleware(request: NextRequest) {
   /**
    * rewrite assets.* to /api/cdn
    */
-  // if (request.nextUrl.hostname.match(/^assets\./)) {
-  if (request.nextUrl.hostname) {
+  if (request.nextUrl.hostname.match(/^assets\./)) {
+  // if (request.nextUrl.hostname) {
     if (request.nextUrl.pathname !== '/') {
       return new NextResponse('404: route not found', { status: 404 })
     }
