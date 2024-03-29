@@ -5,6 +5,8 @@ import sharp from 'sharp'
 type ImageFormats = 'jpeg' | 'png' | 'webp' | 'avif'
 
 export async function GET(request: Request) {
+  console.log({ url: request.url })
+
   const { searchParams } = new URL(request.url)
   const url = searchParams.get('url')
   const format = searchParams.get('format') as ImageFormats || 'webp'
