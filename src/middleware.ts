@@ -11,11 +11,17 @@ export function middleware(request: NextRequest) {
    * rewrite assets.* to /api/cdn
    */
   if (request.nextUrl.hostname.match(/^assets\./)) {
+  // if (request.nextUrl.hostname) {
     if (request.nextUrl.pathname !== '/') {
       return new NextResponse('404: route not found', { status: 404 })
     }
 
-    return NextResponse.rewrite(new URL('/api/cdn', request.url))
+    const url = new URL('/cdn', request.url)
+    url.hostname = 'imagize.jacksonlewis.dev'
+
+    console.log(url.href)
+
+    return NextResponse.rewrite(url)
   }
 
   /**
