@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     ai: 0
   }
 
-  ;(Object.keys(used) as Array<ServiceTypes>).forEach((type: ServiceTypes) => {
+  ;(Object.keys(used) as Array<ServiceTypes>).forEach((type) => {
     available[type] = limits[type] - used[type]
   })
 
