@@ -10,12 +10,14 @@ const storage = new Storage({
   credentials: JSON.parse(gcloudKeys)
 })
 
+
 export async function POST(request: Request) {
   let {
     url,
     quality = 70,
     buffer,
     contentType,
+    size,
     domain = '',
     filepath = ''
   }: {
@@ -23,6 +25,7 @@ export async function POST(request: Request) {
     quality: number,
     buffer: Buffer,
     contentType: ImageContentTypes,
+    size: number
     domain: string,
     filepath: string
   } = await request.json()
@@ -106,7 +109,14 @@ export async function POST(request: Request) {
 
   await logUsage(apiKey, domain, 'optimize')
 
-  return new Response(await image.toBuffer(), {
+  const optBuffer = await image.toBuffer()
+
+  const stats = {
+    original: buffer.byteLength || size,
+    optimized: optBuffer.byteLength
+  }
+
+  return new Response(optBuffer, {
     headers: {
       'Content-Type': contentType
     }
