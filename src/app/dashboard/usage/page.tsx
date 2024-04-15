@@ -1,4 +1,6 @@
+import UsageChart from '@/components/dashboard/usage/chart'
 import { getAccountData } from '@/lib/dashboard'
+import { getAccountUsage } from '@/lib/firebase'
 
 export default async function DashboardUsage() {
   const account = await getAccountData()
@@ -7,25 +9,13 @@ export default async function DashboardUsage() {
     return null
   }
 
+
+  const usage = await getAccountUsage(account.key)
+
   return (
     <div>
       <h1>Usage</h1>
-      <table>
-        <tbody>
-          <tr>
-            <td>Optimize</td>
-            <td>{account.optimizeCredits}</td>
-          </tr>
-          <tr>
-            <td>CDN</td>
-            <td>{account.cdnCredits}</td>
-          </tr>
-          <tr>
-            <td>AI</td>
-            <td>{account.aiCredits}</td>
-          </tr>
-        </tbody>
-      </table>
+      <UsageChart usage={ usage } />
       <h2>Domains</h2>
       <p>This is the list of domains authorized on your account</p>
       <ul>
