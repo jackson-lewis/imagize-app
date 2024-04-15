@@ -1,9 +1,9 @@
-import { initializeApp } from 'firebase/app'
+import { FirebaseOptions, initializeApp } from 'firebase/app'
 import { query, getDocs, getFirestore, collection, where, setDoc, doc, increment, updateDoc, getDoc } from 'firebase/firestore'
 import { LIMITS } from './constants'
 import { Account, ServiceTypes, Plans } from './types'
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.FIREBASE_API_KEY,
   projectId: process.env.FIREBASE_PROJECT_ID,
   appId: process.env.FIREBASE_APP_ID
@@ -74,20 +74,18 @@ export async function logUsage(
   type: ServiceTypes
 ) {
   const [year, month, day] = getCurrentDay().split('-')
-  const collectionDatePath = `${usageCollection}/${apiKey}/${year}-${month}`
-
+  const logRef = doc(db, `${usageCollection}/${apiKey}/${year}-${month}`, day)
+  const excapedDoamin = domain.replace('.', '_')
   /**
    * Update the usage for the domain
    */
   try {
-    await updateDoc(doc(db, collectionDatePath, day), {
-      [domain]: {
-        [type]: increment(1)
-      }
+    await updateDoc(logRef, {
+      [`${excapedDoamin}.${type}`]: increment(1)
     })
   } catch(error) {
-    await setDoc(doc(db, collectionDatePath, day), {
-      [domain]: {
+    await setDoc(logRef, {
+      [excapedDoamin]: {
         [type]: 1
       }
     })
@@ -105,6 +103,44 @@ export async function logUsage(
       }
     }
   })
+}
+
+
+/**
+ * Log the usage to Firestore database.
+ * 
+ * @param apiKey The API key
+ * @param domain The domain the request was for
+ * @param type The action type
+ */
+export async function logStats(
+  apiKey: Account['key'],
+  domain: string,
+  orgSize: number,
+  optSize: number
+) {
+  const [year, month, day] = getCurrentDay().split('-')
+  const logRef = doc(db, `${usageCollection}/${apiKey}/${year}-${month}`, day)
+  const excapedDoamin = domain.replace('.', '_')
+  /**
+   * Update the usage for the domain
+   */
+  try {
+    await updateDoc(logRef, {
+      [`${excapedDoamin}.stats.org`]: increment(orgSize),
+      [`${excapedDoamin}.stats.opt`]: increment(optSize)
+    })
+
+  } catch(error) {
+    await setDoc(logRef, {
+      [excapedDoamin]: {
+        stats: {
+          org: orgSize,
+          opt: optSize
+        }
+      }
+    })
+  }
 }
 
 

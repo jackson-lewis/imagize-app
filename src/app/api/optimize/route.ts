@@ -1,4 +1,4 @@
-import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase'
+import { usageLimitReached, getAccount, getApiKey, logUsage, logStats } from '@/lib/firebase'
 import sharp from 'sharp'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     quality = 70,
     buffer,
     contentType,
-    size,
+    size = 0,
     domain = '',
     filepath = ''
   }: {
@@ -112,9 +112,13 @@ export async function POST(request: Request) {
   const optBuffer = await image.toBuffer()
 
   const stats = {
-    original: buffer.byteLength || size,
+    original: size || buffer.byteLength,
     optimized: optBuffer.byteLength
   }
+
+  console.log(`Image optimized from ${stats.original} to ${stats.optimized}`)
+
+  logStats(apiKey, domain, stats.original, stats.optimized)
 
   return new Response(optBuffer, {
     headers: {
