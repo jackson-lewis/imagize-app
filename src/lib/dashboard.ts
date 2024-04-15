@@ -8,7 +8,7 @@ export async function getAccountData(): Promise<Account | false> {
     return false
   }
 
-  return await fetch('http://localhost:3000/api/accounts', {
+  return await fetch('http://localhost:3010/api/accounts', {
     method: 'get',
     headers: {
       Accept: 'application/json',

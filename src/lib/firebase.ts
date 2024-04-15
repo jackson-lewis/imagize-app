@@ -73,19 +73,23 @@ export async function logUsage(
   domain: string,
   type: ServiceTypes
 ) {
-  const month = getCurrentMonth()
-  const collectionDatePath = `${usageCollection}/${apiKey}/${month}`
+  const [year, month, day] = getCurrentDay().split('-')
+  const collectionDatePath = `${usageCollection}/${apiKey}/${year}-${month}`
 
   /**
    * Update the usage for the domain
    */
   try {
-    await updateDoc(doc(db, collectionDatePath, domain), {
-      [type]: increment(1)
+    await updateDoc(doc(db, collectionDatePath, day), {
+      [domain]: {
+        [type]: increment(1)
+      }
     })
   } catch(error) {
-    await setDoc(doc(db, collectionDatePath, domain), {
-      [type]: 1
+    await setDoc(doc(db, collectionDatePath, day), {
+      [domain]: {
+        [type]: 1
+      }
     })
   }
 
@@ -93,7 +97,13 @@ export async function logUsage(
    * Update the account monthly usage total
    */
   await updateDoc(doc(db, usageCollection, apiKey), {
-    [`${month}.${type}`]: increment(1)
+    [type]: {
+      [year]: {
+        [month]: {
+          [day]: increment(1)
+        }
+      }
+    }
   })
 }
 
@@ -144,6 +154,16 @@ function getUsageLimit(plan: Plans, type: ServiceTypes) {
 export function getCurrentMonth() {
   const date = new Date()
   return `${date.getFullYear()}-${date.getMonth() + 1}`
+}
+
+/**
+ * Get the date as a string as formatted in Firestore
+ * 
+ * Example: `2024-3`
+ */
+export function getCurrentDay() {
+  const date = new Date()
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 }
 
 

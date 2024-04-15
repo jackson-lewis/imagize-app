@@ -2,6 +2,14 @@ import { LIMITS } from '@/lib/constants'
 import { getAccount, getAccountUsage, getApiKey, getCurrentMonth } from '@/lib/firebase'
 import { ServiceTypes, ServiceTypesUsage } from '@/lib/types'
 
+function monthlyTotal(days: {
+  [k: string]: number
+}) {
+  return Object.values(days).reduce((total, dailyTotal) => {
+    return total + dailyTotal
+  }, 0)
+}
+
 export async function GET(request: Request) {
   const apiKey = getApiKey(request)
 
@@ -20,8 +28,12 @@ export async function GET(request: Request) {
     })
   }
 
-  const month = getCurrentMonth()
-  const used: ServiceTypesUsage = usage[month]
+  const [year, month] = getCurrentMonth().split('-')
+  const used: ServiceTypesUsage = {
+    optimize: monthlyTotal(usage.optimize[year][month]),
+    cdn: monthlyTotal(usage.cdn[year][month]),
+    ai: monthlyTotal(usage.ai[year][month])
+  }
   const limits: ServiceTypesUsage = LIMITS[account.plan]
   const available: ServiceTypesUsage = {
     optimize: 0,
