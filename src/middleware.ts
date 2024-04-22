@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
 
     const url = new URL('', request.url)
     url.hostname = 'imagize.jacksonlewis.dev'
-    url.pathname = '/api/cdn'
+    url.pathname = '/api/v1/cdn'
 
     return NextResponse.rewrite(url)
   }
