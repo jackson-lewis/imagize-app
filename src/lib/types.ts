@@ -10,7 +10,7 @@ export interface Account extends DocumentData {
   /**
    * The API key used to authenticate requests.
    */
-  key: `i_${string}`
+  key?: `i_${string}`
   /**
    * The account plan.
    */
@@ -26,11 +26,11 @@ export interface Account extends DocumentData {
   /**
   * Date the account was created
   */
-  createDate: Date
+  createDate?: Date
   /**
    * List of domains authenticated with the account.
    */
-  domains: string[]
+  domains?: string[]
 }
 
 export type ServiceTypesUsage = {
