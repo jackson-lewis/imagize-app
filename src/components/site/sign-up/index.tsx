@@ -14,10 +14,31 @@ export default function SignUpForm() {
   const [selectedPlan, setSelectedPlan] = useState<Plans>('free')
   const [clientSecret, setClientSecret] = useState('')
 
-  function customerDetails(event: React.MouseEvent<HTMLButtonElement>) {
+  async function customerDetails(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
 
-    console.log('hi')
+    const form = formRef.current as HTMLFormElement | null
+
+    if (!form) {
+      return
+    }
+
+    const emailAvailable = await fetch('/api/~/validate-signup-email', {
+      method: 'post',
+      body: JSON.stringify({
+        email: form.email.value
+      })
+    })
+      .then(res => res.json())
+      .then((data: { available: boolean }) => {
+        return data.available
+      })
+
+    console.log(emailAvailable)
+
+    if (!emailAvailable) {
+      alert('Email address is already used.')
+    }
   }
 
   function selectPlan(event: React.MouseEvent<HTMLButtonElement>) {

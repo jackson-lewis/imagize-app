@@ -267,3 +267,20 @@ export async function getAccountUsage(key: Account['key']) {
 
   return docSnap.data()
 }
+
+
+/**
+ * Check if email address is associated to account.
+ * 
+ * @param email Customer email address
+ */
+export async function isEmailAvailable(email: string): Promise<boolean> {
+  const q = query(collection(db, accountCollection), where('email', '==', email))
+  const querySnapshot = await getDocs(q)
+
+  if (querySnapshot.empty) {
+    return true
+  }
+
+  return false
+}
