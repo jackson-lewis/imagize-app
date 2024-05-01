@@ -1,7 +1,15 @@
 import { Account, Plans } from '@/lib/types'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Dispatch, SetStateAction } from 'react'
+import { SignUpFormSteps } from '..'
 
-export default function StripeCheckout({ formRef }: { formRef: any }) {
+export default function StripeCheckout({
+  formRef,
+  setStep
+}: {
+  formRef: any,
+  setStep: Dispatch<SetStateAction<SignUpFormSteps>>
+}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -45,6 +53,7 @@ export default function StripeCheckout({ formRef }: { formRef: any }) {
   return (
     <>
       <PaymentElement />
+      <button type="button" onClick={() => {setStep('choose_plan')}}>Back</button>
       <button onClick={handleSubmit}>Sign up</button>
     </>
   )
