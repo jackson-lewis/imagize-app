@@ -14,7 +14,7 @@ type Series = {
 }
 
 
-export default function UsageChart({ usage }) {
+export default function UsageChart({ usage }: { usage: any }) {
   const formattedData: MonthlyUsage[] = []
   let i = 1
   do {
