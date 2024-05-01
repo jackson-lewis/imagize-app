@@ -9,7 +9,6 @@ export default async function DashboardUsage() {
     return null
   }
 
-
   const usage = await getAccountUsage(account.key)
 
   return (
@@ -18,11 +17,13 @@ export default async function DashboardUsage() {
       <UsageChart usage={ usage } />
       <h2>Domains</h2>
       <p>This is the list of domains authorized on your account</p>
-      <ul>
-        {account.domains.map(domain => (
-          <li key={domain}>{domain} <a href={`?remove-domain=${domain}`}>remove</a></li>
-        ))}
-      </ul>
+      {account.domains ? (
+        <ul>
+          {account.domains.map(domain => (
+            <li key={domain}>{domain} <a href={`?remove-domain=${domain}`}>remove</a></li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   )
 }
