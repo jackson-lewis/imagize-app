@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEventHandler, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import StripeCheckout from './stripe'
 import styles from './style.module.scss'
 import { Plans } from '@/lib/types'
@@ -12,7 +12,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUB_KEY as strin
 export type SignUpFormSteps = 'details' | 'choose_plan' | 'payment'
 
 export default function SignUpForm() {
-  const formRef = useRef(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const [selectedPlan, setSelectedPlan] = useState<Plans>('free')
   const [clientSecret, setClientSecret] = useState('')
   const [step, setStep] = useState<SignUpFormSteps>('details')
@@ -26,7 +26,7 @@ export default function SignUpForm() {
   })
 
   function validateStep(step: SignUpFormSteps) {
-    const form = formRef.current as HTMLFormElement | null
+    const form = formRef.current
 
     if (!form) {
       return false

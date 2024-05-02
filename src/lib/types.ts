@@ -10,7 +10,7 @@ export interface Account extends DocumentData {
   /**
    * The API key used to authenticate requests.
    */
-  key?: `i_${string}`
+  key: `i_${string}`
   /**
    * The account plan.
    */
