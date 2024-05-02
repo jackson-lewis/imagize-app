@@ -45,7 +45,7 @@ export default function StripeCheckout({
       elements,
       confirmParams: {
         // eslint-disable-next-line camelcase
-        return_url: 'http://localhost:3010/dashboard?action=welcome',
+        return_url: `${process.env.VERCEL_URL || 'http://localhost:3010'}/dashboard?action=welcome`,
       },
     });
   }
