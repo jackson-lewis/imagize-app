@@ -24,7 +24,7 @@ export function formatBytes(bytes: number) {
  * @param email The email address
  */
 export async function emailAvailability(email: string) {
-  return await fetch('/api/~/validate-signup-email', {
+  return await fetch('/api/~/email-availability', {
     method: 'post',
     body: JSON.stringify({
       email
