@@ -6,6 +6,7 @@ import styles from './style.module.scss'
 import { Plans } from '@/lib/types'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
+import { emailAvailability } from '@/lib/helpers'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUB_KEY as string);
 
@@ -68,16 +69,7 @@ export default function SignUpForm() {
       return
     }
 
-    const emailAvailable = await fetch('/api/~/validate-signup-email', {
-      method: 'post',
-      body: JSON.stringify({
-        email: form.email.value
-      })
-    })
-      .then(res => res.json())
-      .then((data: { available: boolean }) => {
-        return data.available
-      })
+    const emailAvailable = await emailAvailability(form.email.value)
 
     if (!emailAvailable) {
       alert('Email address is already used.')

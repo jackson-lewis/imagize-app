@@ -7,7 +7,9 @@ export default function StripeCheckout({
   formRef,
   setStep
 }: {
-  formRef: any,
+  formRef: {
+    current: HTMLFormElement
+  },
   setStep: Dispatch<SetStateAction<SignUpFormSteps>>
 }) {
   const stripe = useStripe();
@@ -16,14 +18,13 @@ export default function StripeCheckout({
   async function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
 
-    const data = new FormData(formRef.current)
-
+    const form = formRef.current
     const res = await fetch('/api/v1/accounts/create', {
       method: 'post',
       body: JSON.stringify({
-        email: data.get('email') as string,
-        name: data.get('first_name') as string,
-        plan: data.get('plan') as Plans
+        email: form.email.value as string,
+        name: form.first_name.value as string,
+        plan: form.plan.value as Plans
       })
     })
 

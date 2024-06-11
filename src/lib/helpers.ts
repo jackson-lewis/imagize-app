@@ -16,3 +16,22 @@ export function formatBytes(bytes: number) {
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
+
+
+/**
+ * Check an email address is available.
+ * 
+ * @param email The email address
+ */
+export async function emailAvailability(email: string) {
+  return await fetch('/api/~/validate-signup-email', {
+    method: 'post',
+    body: JSON.stringify({
+      email
+    })
+  })
+    .then(res => res.json())
+    .then((data: { available: boolean }) => {
+      return data.available
+    })
+}

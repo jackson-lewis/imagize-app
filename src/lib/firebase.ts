@@ -238,6 +238,23 @@ export async function createAccount(data: Account) {
 
 
 /**
+ * Update an account
+ * 
+ * @param account 
+ * @param data 
+ * @returns 
+ */
+export async function updateAccount(account: Account, data: any) {
+  const newData: Account = {
+    ...account,
+    ...data
+  }
+
+  return await setDoc(doc(db, accountCollection, account.key), newData)
+}
+
+
+/**
  * Generate an API key for an account.
  * 
  * Keys are 20 characters in length prefixed with `i_`
