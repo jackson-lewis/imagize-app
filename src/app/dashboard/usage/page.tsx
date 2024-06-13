@@ -6,7 +6,7 @@ export default async function DashboardUsage() {
   const account = await getAccountData()
 
   if (!account) {
-    return null
+    return <p>Account not found.</p>
   }
 
   const usage = await getAccountUsage(account.key)
@@ -14,7 +14,7 @@ export default async function DashboardUsage() {
   return (
     <div>
       <h1>Usage</h1>
-      <UsageChart usage={ usage } />
+      <UsageChart usage={usage} />
       <h2>Domains</h2>
       <p>This is the list of domains authorized on your account</p>
       {account.domains ? (
