@@ -22,6 +22,24 @@ const usageCollection = 'usage'
  * @param request 
  */
 export function getApiKey(request: Request) {
+  const cookie = request.headers.get('cookie')
+  const secFetchSite = request.headers.get('sec-fetch-site')
+
+  if (cookie && secFetchSite === 'same-origin') {
+    const split = cookie.split(';')
+    let cookieValue: Account['key'] | false = false
+  
+    split.forEach(cookie => {
+      const [name, value] = cookie.split('=')
+  
+      if (name.trim() === 'accountKey') {
+        cookieValue = value as Account['key']
+      }
+    })
+
+    return cookieValue
+  }
+  
   return request.headers.get('authorization')?.replace(/^Bearer\s/, '') as Account['key'] || false
 }
 
@@ -213,10 +231,28 @@ export async function addDomain(domain: string, account: Account) {
   if (newData.domains.indexOf(domain) < 0) {
     newData.domains.push(domain)
 
-    return await setDoc(doc(db, accountCollection, account.key), newData)
+    await setDoc(doc(db, accountCollection, account.key), newData)
+    return true
   }
 
   return false
+}
+
+
+export async function removeDomain(domain: string, account: Account) {
+  const newData: Account = {
+    ...account
+  }
+
+  const domainIndex = newData.domains?.indexOf(domain) || -1
+
+  if (domainIndex >= 0) {
+    newData.domains?.splice(domainIndex, 1)
+  }
+    
+  await setDoc(doc(db, accountCollection, account.key), newData)
+  
+  return true
 }
 
 
