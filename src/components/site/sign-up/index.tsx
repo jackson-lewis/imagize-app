@@ -1,9 +1,9 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import StripeCheckout from './stripe'
 import styles from './style.module.scss'
-import { Plans } from '@/lib/types'
+import { PlanObject, Plans } from '@/lib/types'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import { emailAvailability } from '@/lib/helpers'
@@ -25,6 +25,27 @@ export default function SignUpForm() {
     number: false,
     special: false
   })
+  const [plans, setPlans] = useState<PlanObject[]>([])
+  const [stripeCustomerId, setStripeCustomerId] = useState('')
+
+  useEffect(() => {
+    async function fetchPlans() {
+      await fetch('/api/~/plans')
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Error fetching plans.')
+          }
+
+          return res.json()
+        })
+        .then((data: PlanObject[]) => {
+          console.log(data)
+          setPlans(data)
+        })
+    }
+
+    fetchPlans()
+  }, [])
 
   function validateStep(step: SignUpFormSteps) {
     const form = formRef.current
@@ -77,6 +98,23 @@ export default function SignUpForm() {
     }
     
     if (validateStep('details')) {
+      const data = new FormData(form)
+
+      await fetch('/api/~/stripe/customer', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: `${data.get('first_name')} ${data.get('last_name')}`.trim(),
+          email: data.get('email')
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setStripeCustomerId(data.customerId)
+        })
+
       setStep('choose_plan')
     }
   }
@@ -84,12 +122,23 @@ export default function SignUpForm() {
   function selectPlan(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
 
-    fetch('/api/~/stripe/create-payment-intent', {
+    const plan = plans.find(plan => {
+      return plan.id === selectedPlan
+    })
+
+    if (!plan) {
+      throw new Error('Plan not found.')
+    }
+
+    fetch('/api/~/stripe/subscription', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ plan: selectedPlan }),
+      body: JSON.stringify({
+        customerId: stripeCustomerId,
+        priceId: plan.price.monthly.id
+      })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -182,39 +231,19 @@ export default function SignUpForm() {
         disabled={step !== 'choose_plan'}
         className={styles.fieldset}
       >
-        <div>
-          <input
-            type="radio"
-            name="plan"
-            value="free"
-            id="plan_free"
-            checked={selectedPlan === 'free'}
-            onChange={handleSelectPlan}
-          />
-          <label htmlFor="plan_free">Free</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="plan"
-            value="pro"
-            id="plan_pro"
-            checked={selectedPlan === 'pro'}
-            onChange={handleSelectPlan}
-          />
-          <label htmlFor="plan_pro">Pro</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="plan"
-            value="enterprise"
-            id="plan_enterprise"
-            checked={selectedPlan === 'enterprise'}
-            onChange={handleSelectPlan}
-          />
-          <label htmlFor="plan_enterprise">Enterprise</label>
-        </div>
+        {plans.map(({ id, name }) => (
+          <div key={id}>
+            <input
+              type="radio"
+              name="plan"
+              value={id}
+              id={id}
+              checked={selectedPlan === id}
+              onChange={handleSelectPlan}
+            />
+            <label htmlFor={`plan_${id}`}>{name}</label>
+          </div>
+        ))}
         <button type="button" onClick={() => {setStep('details')}}>Back</button>
         <button type="button" onClick={selectPlan}>Payment</button>
       </fieldset>

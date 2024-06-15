@@ -36,3 +36,18 @@ export interface Account extends DocumentData {
 export type ServiceTypesUsage = {
   [key in ServiceTypes]: number
 }
+
+
+type PlanPrice = {
+  id: string
+  amount: number
+}
+
+export interface PlanObject extends DocumentData {
+  name: string
+  price: {
+    monthly: PlanPrice
+    yearly: PlanPrice
+  }
+  marketing_features: string[]
+}
