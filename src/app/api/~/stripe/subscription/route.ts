@@ -1,3 +1,4 @@
+import { setBillingCycleDate, setCancelDate } from '@/lib/firebase'
 import Stripe from 'stripe'
 
 const stripe: Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
@@ -32,6 +33,21 @@ export async function POST(request: Request) {
       subscriptionId: id,
       clientSecret
     })
+  } catch (error: any) {
+    return new Response(error.message, {
+      status: 403
+    })
+  }
+}
+
+export async function DELETE(request: Request) {
+  const data = await request.json()
+
+  try {
+    await stripe.subscriptions.cancel(data.subscriptionId)
+    await setCancelDate(data.accountKey)
+
+    return new Response('ok')
   } catch (error: any) {
     return new Response(error.message, {
       status: 403

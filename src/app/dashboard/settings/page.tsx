@@ -1,3 +1,4 @@
+import ManagePlan from '@/components/dashboard/manage-plan'
 import SettingsForm from '@/components/dashboard/settings'
 import { getAccountData } from '@/lib/dashboard'
 
@@ -13,6 +14,7 @@ export default async function DashboardSettings() {
     <>
       <h1>Settings</h1>
       <SettingsForm account={account} />
+      <ManagePlan account={account} />
     </>
   )
 }

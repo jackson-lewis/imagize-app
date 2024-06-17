@@ -31,6 +31,11 @@ export interface Account extends DocumentData {
    * List of domains authenticated with the account.
    */
   domains?: string[]
+  /**
+   * The Stripe subscription ID
+   */
+  subscriptionId?: string
+  billingCycle?: 'monthly' | 'yearly'
 }
 
 export type ServiceTypesUsage = {

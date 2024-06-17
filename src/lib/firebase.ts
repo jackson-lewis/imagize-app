@@ -337,3 +337,16 @@ export async function isEmailAvailable(email: string): Promise<boolean> {
 
   return false
 }
+
+
+export async function setBillingCycleDate(accountKey: Account['key']) {
+  await updateDoc(doc(db, accountCollection, accountKey), {
+    billingCycle: new Date()
+  })
+}
+
+export async function setCancelDate(accountKey: Account['key']) {
+  await updateDoc(doc(db, accountCollection, accountKey), {
+    cancelDate: new Date()
+  })
+}

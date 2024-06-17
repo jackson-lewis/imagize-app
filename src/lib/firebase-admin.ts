@@ -17,11 +17,9 @@ const db = getFirestore(app)
  */
 export async function updatePrice(productId: string, priceId: string, price: number, billed: 'monthly' | 'yearly') {
   await updateDoc(doc(db, 'plans', productId), {
-    price: {
-      [billed]: {
-        id: priceId,
-        amount: price
-      }
+    [`price.${billed}`]: {
+      id: priceId,
+      amount: price
     }
   })
 }
