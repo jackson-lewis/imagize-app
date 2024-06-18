@@ -5,8 +5,13 @@ import { Account, PlanObject } from '@/lib/types'
 import { useEffect, useState } from 'react'
 import Price from '@/components/global/price'
 
+
 export default function ManagePlan({ account }: { account: Account }) {
   async function cancelPlan() {
+    if (account.plan === 'free') {
+      return { success: false }
+    }
+
     const success = await fetch('/api/~/stripe/subscription', {
       method: 'delete',
       headers: {
@@ -30,6 +35,10 @@ export default function ManagePlan({ account }: { account: Account }) {
 
   const [state, action] = useFormState(cancelPlan, { success: false })
   const [plan, setPlan] = useState<PlanObject>()
+
+  if (account.plan === 'pro') {
+    account.subscriptionId
+  }
 
   useEffect(() => {
     async function fetchPlans() {
@@ -58,26 +67,32 @@ export default function ManagePlan({ account }: { account: Account }) {
   if (!plan) {
     return <p>Error loading your plan.</p>
   }
-
-  const billingStart = new Date(account.billingCycleDate.seconds * 1000)
+  
+  const billingStart = account.plan === 'pro' ? new Date(account.billingCycleDate.seconds * 1000) : new Date()
 
   return (
     <div>
       <h2>Manage your plan</h2>
       <div>
         <h3>{plan.name}</h3>
-        <p>
-          <Price amount={plan.price[account.billingCycle || 'monthly'].amount} />
-          {` per ${account.billingCycle === 'monthly' ? 'month' : 'year'}`}
-        </p>
-        <p>Joined: {billingStart.toLocaleDateString('en-GB')}</p>
-        <button type="button">Change plan</button>
-        <form action={action}>
-          <button>Cancel my plan</button>
-          {state.success ? (
-            <p>Plan cancelled.</p>
-          ) : null}
-        </form>
+        {account.plan === 'pro' ? (
+          <>
+            <p>
+              <Price amount={plan.price[account.billingCycle].amount} />
+              {` per ${account.billingCycle === 'monthly' ? 'month' : 'year'}`}
+            </p>
+            <p>Joined: {billingStart.toLocaleDateString('en-GB')}</p>
+            <button type="button">Change plan</button>
+            <form action={action}>
+              <button>Cancel my plan</button>
+              {state.success ? (
+                <p>Plan cancelled.</p>
+              ) : null}
+            </form>
+          </>
+        ) : (
+          <button>Join Pro</button>
+        )}
       </div>
     </div>
   )
