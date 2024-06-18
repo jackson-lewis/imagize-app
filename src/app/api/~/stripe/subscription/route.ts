@@ -1,4 +1,4 @@
-import { setBillingCycleDate, setCancelDate } from '@/lib/firebase'
+import { setCancelDate } from '@/lib/firebase/account'
 import Stripe from 'stripe'
 
 const stripe: Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)

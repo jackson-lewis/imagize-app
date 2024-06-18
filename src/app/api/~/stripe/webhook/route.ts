@@ -1,4 +1,4 @@
-import { updatePlan, updatePrice } from '@/lib/firebase-admin'
+import { updatePlan, updatePrice } from '@/lib/firebase/admin'
 import Stripe from 'stripe'
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)

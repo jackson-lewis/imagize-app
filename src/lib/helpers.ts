@@ -35,3 +35,25 @@ export async function emailAvailability(email: string) {
       return data.available
     })
 }
+
+
+/**
+ * Get the date as a string as formatted in Firestore
+ * 
+ * Example: `2024-3`
+ */
+export function getCurrentMonth() {
+  const date = new Date()
+  return `${date.getFullYear()}-${date.getMonth() + 1}`
+}
+
+
+/**
+ * Get the date as a string as formatted in Firestore
+ * 
+ * Example: `2024-3`
+ */
+export function getCurrentDay() {
+  const date = new Date()
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+}

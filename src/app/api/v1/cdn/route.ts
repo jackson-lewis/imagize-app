@@ -1,4 +1,4 @@
-import { usageLimitReached, getAccountByDomain, logUsage } from '@/lib/firebase'
+import { usageLimitReached, getAccountByDomain, logUsage } from '@/lib/firebase/account'
 import { redirect } from 'next/navigation'
 import sharp from 'sharp'
 

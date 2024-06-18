@@ -1,4 +1,4 @@
-import { createAccount } from '@/lib/firebase'
+import { createAccount } from '@/lib/firebase/account'
 
 export async function POST(request: Request) {
   const data = await request.json()

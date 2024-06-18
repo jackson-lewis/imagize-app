@@ -1,4 +1,4 @@
-import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase'
+import { usageLimitReached, getAccount, getApiKey, logUsage } from '@/lib/firebase/account'
 
 type Languages = 'en' | 'fr' | 'de' | 'it' | 'es'
 

@@ -1,4 +1,4 @@
-import { getAccount, getApiKey } from '@/lib/firebase'
+import { getAccount, getApiKey } from '@/lib/firebase/account'
 
 export async function GET(request: Request) {
   const apiKey = getApiKey(request)

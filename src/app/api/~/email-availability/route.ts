@@ -1,4 +1,4 @@
-import { isEmailAvailable } from '@/lib/firebase'
+import { isEmailAvailable } from '@/lib/firebase/account'
 import { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest) {

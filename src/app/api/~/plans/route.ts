@@ -1,4 +1,4 @@
-import { getPlans } from '@/lib/firebase-site'
+import { getPlans } from '@/lib/firebase/site'
 
 export async function GET() {
   const plans = await getPlans()

@@ -1,4 +1,4 @@
-import { usageLimitReached, getAccount, getApiKey, logUsage, logStats } from '@/lib/firebase'
+import { usageLimitReached, getAccount, getApiKey, logUsage, logStats } from '@/lib/firebase/account'
 import sharp from 'sharp'
 import { Storage } from '@google-cloud/storage'
 import { ImageContentTypes } from '@/lib/types'

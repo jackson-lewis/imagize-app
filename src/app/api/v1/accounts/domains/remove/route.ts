@@ -1,4 +1,4 @@
-import { getAccount, getApiKey, removeDomain } from '@/lib/firebase'
+import { getAccount, getApiKey, removeDomain } from '@/lib/firebase/account'
 
 export async function POST(request: Request) {
   let {

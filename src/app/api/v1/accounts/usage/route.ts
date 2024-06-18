@@ -1,5 +1,6 @@
 import { LIMITS } from '@/lib/constants'
-import { getAccount, getAccountUsage, getApiKey, getCurrentMonth } from '@/lib/firebase'
+import { getAccount, getAccountUsage, getApiKey } from '@/lib/firebase/account'
+import { getCurrentMonth } from '@/lib/helpers'
 import { ServiceTypes, ServiceTypesUsage } from '@/lib/types'
 
 function monthlyTotal(days: {
