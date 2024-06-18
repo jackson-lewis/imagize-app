@@ -3,9 +3,7 @@ import { Plans, ServiceTypesUsage } from './types'
 /**
  * The number of monthly credits available
  */
-export const LIMITS: {
-  [key in Plans]: ServiceTypesUsage
-} = {
+export const LIMITS: Record<Plans, ServiceTypesUsage> = {
   free: {
     optimize: 100,
     cdn: 100,

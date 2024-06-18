@@ -48,10 +48,15 @@ export interface PaidAccount extends BaseAccount {
 
 export type Account = FreeAccount | PaidAccount
 
-export type ServiceTypesUsage = {
-  [key in ServiceTypes]: number
-}
+export type ServiceTypesUsage = Record<ServiceTypes, number>
 
+export type AccountUsage = Record<ServiceTypes, {
+  [Year: string]: {
+    [Month: string]: {
+      [Day: string]: number
+    }
+  }
+}>
 
 type PlanPrice = {
   id: string
@@ -59,10 +64,14 @@ type PlanPrice = {
 }
 
 export interface PlanObject extends DocumentData {
+  /**
+   * The Stripe product ID
+   */
+  id: string
+  /**
+   * The plan name
+   */
   name: string
-  price: {
-    monthly: PlanPrice
-    yearly: PlanPrice
-  }
+  price: Record<BillingCycles, PlanPrice>
   marketing_features: string[]
 }

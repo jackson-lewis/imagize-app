@@ -1,6 +1,6 @@
 import { query, getDocs, collection, where, setDoc, doc, increment, updateDoc, getDoc } from 'firebase/firestore'
 import { LIMITS } from '@/lib/constants'
-import { Account, ServiceTypes, Plans } from '@/lib/types'
+import { Account, ServiceTypes, Plans, AccountUsage } from '@/lib/types'
 import { firestore } from './config'
 import { getCurrentDay, getCurrentMonth } from '../helpers'
 
@@ -200,7 +200,7 @@ export async function getAccountUsage(key: Account['key']) {
     return false
   }
 
-  return docSnap.data()
+  return docSnap.data() as AccountUsage
 }
 
 
