@@ -1,15 +1,13 @@
 import { Account, Plans } from '@/lib/types'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, RefObject, SetStateAction } from 'react'
 import { SignUpFormSteps } from '..'
 
 export default function StripeCheckout({
   formRef,
   setStep
 }: {
-  formRef: {
-    current: HTMLFormElement
-  },
+  formRef: RefObject<HTMLFormElement>
   setStep: Dispatch<SetStateAction<SignUpFormSteps>>
 }) {
   const stripe = useStripe();
