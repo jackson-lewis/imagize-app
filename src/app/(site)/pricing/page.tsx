@@ -1,5 +1,5 @@
 import Plans from '@/components/site/plans'
-import { getPlans } from '@/lib/firebase-site'
+import { getPlans } from '@/lib/firebase/site'
 
 export default async function PricingPage() {
   const plans = await getPlans()

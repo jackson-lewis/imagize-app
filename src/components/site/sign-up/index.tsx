@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './style.module.scss'
 import { PlanObject } from '@/lib/types'
 import CustomerDetails from './customer-details'
-import SelectPlan from './stripe/select-plan'
+import SelectPlan from './select-plan'
 import Payment from './payment'
 
 export type SignUpFormSteps = 'details' | 'choose_plan' | 'payment'

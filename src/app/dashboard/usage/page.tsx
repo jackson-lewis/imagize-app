@@ -1,7 +1,7 @@
 import UsageChart from '@/components/dashboard/usage/chart'
 import Domains from '@/components/dashboard/usage/domains'
 import { getAccountData } from '@/lib/dashboard'
-import { getAccountUsage } from '@/lib/firebase'
+import { getAccountUsage } from '@/lib/firebase/account'
 
 export default async function DashboardUsage() {
   const account = await getAccountData()
