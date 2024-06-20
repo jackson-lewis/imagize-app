@@ -9,8 +9,7 @@ export default function Price({
 }) {
   const formatted = new Intl.NumberFormat('en-GB', {
     style: 'currency',
-    currency: CURRENCY,
-    trailingZeroDisplay: 'stripIfInteger'
+    currency: CURRENCY
   }).format(amount / 100)
 
   return (
