@@ -17,6 +17,11 @@ export default function StripeCheckout({
     event.preventDefault()
 
     const form = formRef.current
+
+    if (!form) {
+      return false
+    }
+
     const res = await fetch('/api/v1/accounts/create', {
       method: 'post',
       body: JSON.stringify({
