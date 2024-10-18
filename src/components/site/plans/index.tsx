@@ -9,6 +9,16 @@ export default function Plans({ data }: { data: PlanObject[] }) {
   
   return (
     <div>
+      <button 
+        onClick={() => setInterval('monthly')}
+      >
+        Monthly
+      </button>
+      <button 
+        onClick={() => setInterval('yearly')}
+      >
+        Yearly
+      </button>
       {data.map(plan => (
         <div key={plan.name}>
           <h3>{plan.name}</h3>
