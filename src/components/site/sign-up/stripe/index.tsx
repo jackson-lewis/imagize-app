@@ -45,8 +45,7 @@ export default function StripeCheckout({
       return;
     }
 
-    const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-    const origin = vercelUrl ? `https://${vercelUrl}` : 'http://localhost:3010'
+    const origin = process.env.VERCEL ? 'https://imagize.jacksonlewis.co.uk' : 'http://localhost:3010'
 
     const { error } = await stripe.confirmPayment({
       elements,
