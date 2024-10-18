@@ -1,4 +1,5 @@
 import { updatePlan, updatePrice } from '@/lib/firebase/admin'
+import { revalidatePath } from 'next/cache'
 import Stripe from 'stripe'
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
       if (interval === 'month' || interval === 'year') {
         await updatePrice(product, priceId, unitAmount, `${interval}ly`)
+        revalidatePath('/pricing')
       }
     }
     break
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
         return feature.name
       })
     })
+    revalidatePath('/pricing')
     break
   }
 
